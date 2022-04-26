@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BookStore.Controllers
@@ -77,21 +78,15 @@ namespace BookStore.Controllers
 
             //var book = _context.Books.Where(x => x.Id == id).SingleOrDefault();
             //return book;
-            BookDetailViewModel result;
 
-            try
-            {
+            //BookDetailViewModel result;
+
                 GetBookDetailQuery query = new GetBookDetailQuery(_context, _mapper);
                 query.BookId = id;
                 GetBookDetailQueryValidator validator = new GetBookDetailQueryValidator();
                 validator.ValidateAndThrow(query);
-                result = query.Handle();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(result);
+          
+            return Ok(query);
         }
 
         //[HttpGet]
@@ -123,8 +118,7 @@ namespace BookStore.Controllers
             //return Ok();
 
             CreateBookCommand command = new CreateBookCommand(_context, _mapper);
-            try
-            {
+            
                 
                 command.Model = newBook;
 
@@ -142,12 +136,6 @@ namespace BookStore.Controllers
                 //}
                 //else
                 //    command.Handle();
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest(ex.Message);
-            }
             
             return Ok();
         }
@@ -182,19 +170,14 @@ namespace BookStore.Controllers
 
             //_context.SaveChanges();
             //return Ok();
-            try
-            {
+           
                 UpdateBookCommand command = new UpdateBookCommand(_context);
                 command.BookId = id;
                 command.Model = updatedBook;
                 UpdateBookCommandValidator validator = new UpdateBookCommandValidator();
                 validator.ValidateAndThrow(command);
                 command.Handle();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+           
             return Ok();
         }
 
@@ -219,19 +202,13 @@ namespace BookStore.Controllers
             //return Ok();
 
            
-            try
-            {
+          
                 DeleteBookCommand command = new DeleteBookCommand(_context);
                 command.BookId = id;
 
                 DeleteBookCommandValidator validator = new DeleteBookCommandValidator();
                 validator.ValidateAndThrow(command);
-                command.Handle();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            
             return Ok();
         }
     }
